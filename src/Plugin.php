@@ -14,6 +14,9 @@ class Plugin implements PluginEntryPointInterface
         foreach ($this->getStubFiles() as $file) {
             $psalm->addStubFile($file);
         }
+
+        class_exists(Hooks\ExpectCaseHandler::class, true);
+        $psalm->registerHooksFromClass(Hooks\ExpectCaseHandler::class);
     }
 
     /** @return list<string> */
