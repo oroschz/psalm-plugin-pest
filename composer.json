@@ -1,0 +1,64 @@
+{
+    "name": "oroschz/psalm-plugin-pest",
+    "description": "Psalm plugin for Pest",
+    "type": "psalm-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Orlando Ospino Sánchez",
+            "email": "oroschz@outlook.com"
+        }
+    ],
+    "require": {
+        "vimeo/psalm": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5.5",
+        "squizlabs/php_codesniffer": "^3.3",
+        "psalm/plugin-phpunit": "^0.16.0",
+        "weirdan/prophecy-shim": "^2.0",
+        "weirdan/codeception-psalm-module": "^0.13.1",
+        "codeception/codeception": "^4.1",
+        "pestphp/pest": "^1.21"
+    },
+    "extra": {
+        "psalm": {
+            "pluginClass": "Oroschz\\PsalmPluginPest\\Plugin"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Oroschz\\PsalmPluginPest\\": [
+                "src/"
+            ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Oroschz\\PsalmPluginPest\\Tests\\": [
+                "tests/_support",
+                "tests"
+            ]
+        }
+    },
+    "scripts": {
+        "check": [
+            "@lint",
+            "@code:check",
+            "@test:build",
+            "@test:unit",
+            "@test:acceptance"
+        ],
+        "lint": "psalm",
+        "code:check": "phpcs",
+        "code:fix": "phpcbf",
+        "test:build": "codecept build",
+        "test:unit": "codecept run unit",
+        "test:acceptance": "codecept run acceptance"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}

@@ -1,0 +1,19 @@
+# Composer
+composer.phar
+/vendor/
+# composer.lock
+
+# Generated files
+.phpunit.result.cache
+.phpunit.cache
+
+# PHPLint
+/.phplint-cache
+
+# Build data
+/build/
+
+# Codeception
+tests/_run/*
+tests/_output/*
+tests/_support/_generated/*

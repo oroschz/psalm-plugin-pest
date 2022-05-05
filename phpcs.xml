@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ruleset
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd"
+    name="invajo">
+    <!-- display progress -->
+    <arg value="p" />
+    <arg name="colors" />
+
+    <!-- Paths to check -->
+    <file>src</file>
+    <file>tests</file>
+    <exclude-pattern>tests/_(run|output)/*</exclude-pattern>
+    <exclude-pattern>tests/_support/_generated/*</exclude-pattern>
+
+    <!-- inherit rules from: -->
+    <rule ref="PSR12" />
+
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax" />
+    <rule ref="Generic.Files.ByteOrderMark" />
+    <rule ref="Generic.Files.LineEndings" />
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <!-- even though psr-2 specifies it as soft-limit only -->
+            <property name="absoluteLineLimit" value="120" />
+        </properties>
+    </rule>
+    <rule ref="Generic.PHP.DeprecatedFunctions" />
+    <rule ref="Generic.PHP.ForbiddenFunctions" />
+
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false" />
+        </properties>
+    </rule>
+</ruleset>

@@ -1,0 +1,4 @@
+actor: UnitTester
+modules:
+    enabled:
+        - \Oroschz\PsalmPluginPest\Tests\Helper\Unit
