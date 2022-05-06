@@ -16,7 +16,7 @@ Feature: expect return type
         </plugins>
       </psalm>
       """
-  Scenario: run without PossiblyUndefinedMethod
+  Scenario: run without issues
     Given I have the following code 
       """
       <?php
@@ -25,7 +25,4 @@ Feature: expect return type
       });
       """
     When I run Psalm
-    Then I see these errors
-      | Type                  | Message                                                                                  |
-      | InternalMethod        | The method Pest\Expectation::toBeTrue is internal to Pest but called from root namespace |
-    And I see no other errors
+    Then I see no errors

@@ -2,10 +2,15 @@
 
 namespace Oroschz\PsalmPluginPest\Hooks;
 
+use Psalm\Issue\InternalMethod;
 use Psalm\Plugin\EventHandler\AfterFunctionCallAnalysisInterface;
+use Psalm\Plugin\EventHandler\BeforeAddIssueInterface;
 use Psalm\Plugin\EventHandler\Event\AfterFunctionCallAnalysisEvent;
+use Psalm\Plugin\EventHandler\Event\BeforeAddIssueEvent;
 
-class ExpectCaseHandler implements AfterFunctionCallAnalysisInterface
+use function str_starts_with;
+
+class ExpectCaseHandler implements AfterFunctionCallAnalysisInterface, BeforeAddIssueInterface
 {
     /**
      * Determines the return type when calling the expect function
@@ -25,5 +30,25 @@ class ExpectCaseHandler implements AfterFunctionCallAnalysisInterface
         }
 
         $event->getReturnTypeCandidate()->removeType($typeToDiscard);
+    }
+
+    /**
+     * Suppresses Psalm's InternalMethod issue
+     *
+     * {@inheritDoc}
+     */
+    public static function beforeAddIssue(BeforeAddIssueEvent $event): ?bool
+    {
+        $issue = $event->getIssue();
+        if (!$issue instanceof InternalMethod) {
+            return null;
+        }
+
+        $isExpectation = str_starts_with($issue->method_id, "pest\\expectation::");
+        if (!$isExpectation) {
+            return null;
+        }
+
+        return false;
     }
 }
