@@ -3,33 +3,40 @@
 namespace Oroschz\PsalmPluginPest\Hooks;
 
 use Psalm\Issue\InternalMethod;
-use Psalm\Plugin\EventHandler\AfterFunctionCallAnalysisInterface;
+use Psalm\Plugin\EventHandler\FunctionReturnTypeProviderInterface;
 use Psalm\Plugin\EventHandler\BeforeAddIssueInterface;
-use Psalm\Plugin\EventHandler\Event\AfterFunctionCallAnalysisEvent;
+use Psalm\Plugin\EventHandler\Event\FunctionReturnTypeProviderEvent;
 use Psalm\Plugin\EventHandler\Event\BeforeAddIssueEvent;
+use Psalm\Type\Union;
+use Psalm\Type\Atomic;
 
 use function str_starts_with;
 
-class ExpectCaseHandler implements AfterFunctionCallAnalysisInterface, BeforeAddIssueInterface
+class ExpectCaseHandler implements FunctionReturnTypeProviderInterface, BeforeAddIssueInterface
 {
     /**
-     * Determines the return type when calling the expect function
-     *
-     * {@inheritDoc}
+     * @return array<lowercase-string>
      */
-    public static function afterFunctionCallAnalysis(AfterFunctionCallAnalysisEvent $event): void
+    public static function getFunctionIds(): array
     {
-        $expression = $event->getExpr();
-        if ($event->getFunctionId() !== "expect") {
-            return;
+        return ["expect"];
+    }
+
+    /**
+     * Determines the return type when calling the expect function
+     * @return ?Union
+     */
+    public static function getFunctionReturnType(FunctionReturnTypeProviderEvent $event): ?Union
+    {
+        if (!$event->getCallArgs()) {
+            return new Union([
+                new Atomic\TNamedObject(\Pest\Support\Extendable::class)
+            ]);
         }
 
-        $typeToDiscard = "Pest\Expectation";
-        if ($expression->getArgs()) {
-            $typeToDiscard = "Pest\Support\Extendable";
-        }
-
-        $event->getReturnTypeCandidate()->removeType($typeToDiscard);
+        return new Union([
+            new Atomic\TNamedObject(\Pest\Expectation::class)
+        ]);
     }
 
     /**
