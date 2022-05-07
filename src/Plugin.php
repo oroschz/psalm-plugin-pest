@@ -17,6 +17,9 @@ class Plugin implements PluginEntryPointInterface
 
         class_exists(Hooks\ExpectCaseHandler::class, true);
         $psalm->registerHooksFromClass(Hooks\ExpectCaseHandler::class);
+
+        class_exists(Hooks\AssertCaseHandler::class, true);
+        $psalm->registerHooksFromClass(Hooks\AssertCaseHandler::class);
     }
 
     /** @return list<string> */
