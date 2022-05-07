@@ -8,7 +8,6 @@ use Psalm\Plugin\EventHandler\Event\BeforeStatementAnalysisEvent;
 
 class AssertCaseHandler implements BeforeStatementAnalysisInterface
 {
-
     public static function beforeStatementAnalysis(BeforeStatementAnalysisEvent $event): ?bool
     {
         $stmt = $event->getStmt();
@@ -19,7 +18,7 @@ class AssertCaseHandler implements BeforeStatementAnalysisInterface
 
         if ($stmt->expr instanceof \PhpParser\Node\Expr\FuncCall) {
             $case = $stmt->expr;
-        } else if (
+        } elseif (
             $stmt->expr instanceof \PhpParser\Node\Expr\MethodCall
             && $stmt->expr->var instanceof \PhpParser\Node\Expr\FuncCall
         ) {
@@ -29,15 +28,14 @@ class AssertCaseHandler implements BeforeStatementAnalysisInterface
         }
 
         $name = $case->name->getAttribute("resolvedName");
-        if ($name !== "test" && $name !== "it") {
+
+        if (($name === "test" || $name === "it") && count($case->args) === 2) {
+            $callback = $case->args[1];
+        } elseif (($name === "beforeEach" || $name === "afterEach") && count($case->args) == 1) {
+            $callback = $case->args[0];
+        } else {
             return null;
         }
-
-        if (count($case->args) < 2) {
-            return null;
-        }
-
-        $callback = $case->args[1];
 
         if (!$callback instanceof \PhpParser\Node\Arg) {
             return null;
