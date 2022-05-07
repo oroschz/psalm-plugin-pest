@@ -32,15 +32,9 @@ class AssertCaseHandler implements BeforeStatementAnalysisInterface
             return null;
         }
 
-        $doc_block = [
-            new \PhpParser\Node\Stmt\Nop([
-                "comments" => [
-                    new Doc("/** @psalm-scope-this PHPUnit\Framework\TestCase */")
-                ]
-            ])
-        ];
-
-        $value->stmts = array_merge($doc_block, $value->stmts);
+        $doc_block = new \PhpParser\Node\Stmt\Nop();
+        $doc_block->setDocComment(new Doc("/** @psalm-scope-this PHPUnit\Framework\TestCase */"));
+        $value->stmts = [$doc_block, ...$value->stmts];
 
         return  null;
     }
